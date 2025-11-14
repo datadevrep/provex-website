@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>ProveX.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        :root {
+            --background: hsl(220, 25%, 9%);
+            --foreground: hsl(210, 40%, 98%);
+
+            --card: hsl(220, 23%, 12%);
+            --card-foreground: hsl(210, 40%, 98%);
+
+            --primary: hsl(189, 94%, 43%);
+            --primary-foreground: hsl(220, 25%, 9%);
+
+            --secondary: hsl(220, 20%, 18%);
+            --secondary-foreground: hsl(210, 40%, 98%);
+
+            --muted: hsl(220, 20%, 18%);
+            --muted-foreground: hsl(215, 20%, 65%);
+
+            --destructive: hsl(0, 84%, 60%);
+            --border: hsl(220, 20%, 18%);
+
+            --radius: 12px;
+            --container-width: 1200px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: "Poppins", "Avenir Next", -apple-system, BlinkMacSystemFont,
+                "Segoe UI", system-ui, sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 0;
+            font-family: "Poppins", "Avenir Next", -apple-system, BlinkMacSystemFont,
+                "Segoe UI", system-ui, sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+
+        p {
+            margin: 0;
+            line-height: 1.7;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Background canvas */
+        #tech-bg {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 96px 0;
+        }
+
+        .section-muted {
+            background-color: rgba(17, 25, 40, 0.25);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: clamp(2.25rem, 3vw + 1rem, 3.25rem);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto 48px;
+            font-size: 1.125rem;
+            color: var(--muted-foreground);
+        }
+
+        .scroll-margin {
+            scroll-margin-top: 80px;
+        }
+
+        /* NAVBAR */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(20px);
+            background-color: rgba(13, 18, 30, 0.92);
+            border-bottom: 1px solid rgba(56, 66, 92, 0.5);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .nav-logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .nav-logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .nav-logo-fallback {
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .nav-logo-text {
+            font-family: "Avenir Next", -apple-system, BlinkMacSystemFont,
+                "Segoe UI", system-ui, sans-serif;
+            font-weight: 700;
+            /* Avenir Next Bold */
+            font-size: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            font-size: 14px;
+            color: var(--muted-foreground);
+        }
+
+        .nav-link {
+            border: none;
+            background: none;
+            padding: 0;
+            color: inherit;
+            font: inherit;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-cta {
+            padding: 8px 18px;
+            border-radius: 999px;
+            border: none;
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .nav-cta:hover {
+            background-color: hsl(189, 94%, 48%);
+            transform: translateY(-1px);
+        }
+
+        /* Mobile nav */
+        .nav-toggle {
+            display: none;
+            border: none;
+            background: none;
+            color: var(--foreground);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .nav-toggle-icon {
+            width: 24px;
+            height: 24px;
+            position: relative;
+        }
+
+        .nav-toggle-icon span {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--foreground);
+            border-radius: 999px;
+            transition: transform 0.2s ease, opacity 0.2s ease, top 0.2s ease, bottom 0.2s ease;
+        }
+
+        .nav-toggle-icon span:nth-child(1) {
+            top: 5px;
+        }
+
+        .nav-toggle-icon span:nth-child(2) {
+            top: 11px;
+        }
+
+        .nav-toggle-icon span:nth-child(3) {
+            bottom: 5px;
+        }
+
+        .nav-toggle.open .nav-toggle-icon span:nth-child(1) {
+            top: 11px;
+            transform: rotate(45deg);
+        }
+
+        .nav-toggle.open .nav-toggle-icon span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .nav-toggle.open .nav-toggle-icon span:nth-child(3) {
+            bottom: 11px;
+            transform: rotate(-45deg);
+        }
+
+        .nav-mobile {
+            display: none;
+            padding: 8px 0 16px;
+        }
+
+        .nav-mobile.open {
+            display: block;
+        }
+
+        .nav-mobile .nav-link {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 8px 0;
+        }
+
+        .nav-mobile .nav-cta {
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        /* HERO */
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+            padding-bottom: 80px;
+        }
+
+        .hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 0,
+                    rgba(21, 214, 255, 0.15),
+                    transparent 55%);
+            pointer-events: none;
+        }
+
+        .hero-inner {
+            position: relative;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero-logo {
+            width: 128px;
+            height: 128px;
+            border-radius: 32px;
+            margin: 0 auto 24px;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .hero-logo-placeholder {
+            font-size: 64px;
+            font-weight: 800;
+        }
+
+        .hero-title {
+            font-size: clamp(2.75rem, 4vw + 1rem, 4.25rem);
+            margin-bottom: 16px;
+        }
+
+        .hero-text {
+            font-size: 1.25rem;
+            color: var(--muted-foreground);
+            max-width: 640px;
+            margin: 0 auto 32px;
+        }
+
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: 14px 32px;
+            border-radius: 999px;
+            border: none;
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: hsl(189, 94%, 48%);
+            transform: translateY(-1px);
+        }
+
+        /* CARD */
+        .card {
+            background-color: var(--card);
+            color: var(--card-foreground);
+            border-radius: var(--radius);
+            border: 1px solid rgba(56, 66, 92, 0.7);
+            padding: 24px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-muted {
+            background-color: var(--secondary);
+        }
+
+        .card-soft {
+            background: linear-gradient(135deg,
+                    rgba(21, 214, 255, 0.08),
+                    rgba(21, 214, 255, 0));
+            border-color: rgba(21, 214, 255, 0.3);
+        }
+
+        /* PROBLEM LIST */
+        .problem-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .problem-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 1.05rem;
+        }
+
+        .problem-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--destructive);
+            margin-top: 9px;
+            flex-shrink: 0;
+        }
+
+        /* ICON CIRCLES (for cards) */
+        .icon-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: rgba(21, 214, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 22px;
+            color: var(--primary);
+        }
+
+        .icon-large {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background-color: rgba(21, 214, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        /* GRIDS */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+
+            .grid-3,
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* USE CASES */
+        .use-case-list {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .use-case-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+
+        .use-case-dot.mid {
+            background-color: rgba(21, 214, 255, 0.7);
+        }
+
+        .use-case-dot.long {
+            background-color: rgba(21, 214, 255, 0.4);
+        }
+
+        .use-case-body {
+            font-size: 0.98rem;
+            color: var(--muted-foreground);
+        }
+
+        .use-case-body span {
+            color: var(--foreground);
+            font-weight: 600;
+        }
+
+        .token-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background-color: rgba(21, 214, 255, 0.1);
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .token-chip-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+        }
+
+        /* SACRIFICE SECTION */
+        .sacrifice-points {
+            max-width: 640px;
+            margin: 0 auto 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .sacrifice-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .sacrifice-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            margin-top: 9px;
+            flex-shrink: 0;
+        }
+
+        /* FOOTER */
+        footer {
+            border-top: 1px solid rgba(56, 66, 92, 0.7);
+            background-color: rgba(17, 25, 40, 0.6);
+            padding: 32px 0 40px;
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        .footer-inner {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+                "Liberation Mono", "Courier New", monospace;
+        }
+
+        .footer-link {
+            border: none;
+            background: none;
+            color: var(--muted-foreground);
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .footer-link:hover {
+            color: white;
+            text-decoration-color: white;
+        }
+
+
+        /* DISCLAIMER MODAL */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(15, 23, 42, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 40;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal {
+            max-width: 640px;
+            width: 100%;
+            margin: 0 16px;
+            background-color: var(--card);
+            border-radius: 18px;
+            border: 1px solid rgba(56, 66, 92, 0.7);
+            padding: 24px 24px 20px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.75);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+        }
+
+        .modal-close {
+            border: none;
+            background: none;
+            color: var(--muted-foreground);
+            cursor: pointer;
+            font-size: 22px;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .modal-body {
+            font-size: 0.95rem;
+            color: var(--muted-foreground);
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .modal-body p+p {
+            margin-top: 12px;
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 72px 0;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-actions {
+                display: none;
+            }
+
+            .nav-toggle {
+                display: inline-flex;
+            }
+        }
+
+        /* Minimal subtle scrollbar */
+        ::-webkit-scrollbar {
+        width: 4px;              /* thinner scrollbar */
+        }
+
+        ::-webkit-scrollbar-track {
+        background: transparent; /* no visible track */
+        }
+
+        ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.08); /* very faint thumb */
+        border-radius: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- Tech background canvas -->
+    <canvas id="tech-bg"></canvas>
+
+    <div class="page">
+        <!-- NAVBAR -->
+        <header class="nav">
+            <div class="container nav-inner">
+                <div class="nav-left" data-scroll-target="#hero">
+                    <div class="nav-logo-img">
+                        <!-- Replace with your real logo file -->
+                        <img src="provex.png" alt="ProveX logo"
+                            onerror="this.style.display='none';this.parentNode.querySelector('.nav-logo-fallback').style.display='block';" />
+                        <div class="nav-logo-fallback" style="display:none;">X</div>
+                    </div>
+                    <div class="nav-logo-text">ProveX</div>
+                </div>
+
+                <nav class="nav-links">
+                    <button class="nav-link" data-scroll="#problem">Problem</button>
+                    <button class="nav-link" data-scroll="#solution">Solution</button>
+                    <button class="nav-link" data-scroll="#tokenomics">Tokenomics</button>
+                    <button class="nav-link" data-scroll="#use-cases">Use Cases</button>
+                    <button class="nav-link" data-scroll="#why-provex">Why ProveX</button>
+                </nav>
+
+                <div class="nav-actions">
+                    <button class="nav-cta" data-scroll="#sacrifice">Join Sacrifice</button>
+                </div>
+
+                <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                    <div class="nav-toggle-icon">
+                        <span></span><span></span><span></span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Mobile nav -->
+            <div class="container nav-mobile" id="nav-mobile">
+                <button class="nav-link" data-scroll="#problem">Problem</button>
+                <button class="nav-link" data-scroll="#solution">Solution</button>
+                <button class="nav-link" data-scroll="#tokenomics">Tokenomics</button>
+                <button class="nav-link" data-scroll="#use-cases">Use Cases</button>
+                <button class="nav-link" data-scroll="#why-provex">Why ProveX</button>
+                <button class="nav-cta" data-scroll="#sacrifice">Join Sacrifice</button>
+            </div>
+        </header>
+
+        <!-- HERO -->
+        <section id="hero" class="hero scroll-margin">
+            <div class="hero-gradient"></div>
+            <div class="container">
+                <div class="hero-inner">
+                    <div class="hero-logo">
+                        <!-- Replace with your hero logo -->
+                        <img src="provex.png" alt="ProveX logo"
+                            onerror="this.style.display='none';this.parentNode.querySelector('.hero-logo-placeholder').style.display='block';" />
+                        <div class="hero-logo-placeholder" style="display:none;">X</div>
+                    </div>
+
+                    <h1 class="hero-title">Proof Over Trust</h1>
+                    <p class="hero-text">
+                        ProveX removes middlemen from crypto exchanges and beyond.
+                        Every use burns ProveX tokens, creating scarcity.
+                    </p>
+
+                    <div class="hero-actions">
+                        <button class="btn-primary" data-scroll="#problem">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROBLEM -->
+        <section id="problem" class="section-muted scroll-margin">
+            <div class="container">
+                <h2 class="section-title">The Middleman Problem</h2>
+                <p class="section-subtitle">
+                    Crypto was invented to remove middlemen. Yet exchanges still stand between your bank and your
+                    wallet.
+                </p>
+
+                <div class="card card-muted" style="max-width: 720px; margin: 0 auto;">
+                    <div class="problem-list">
+                        <div class="problem-item">
+                            <div class="problem-dot"></div>
+                            <p>Exchanges charge excessive fees while holding your funds hostage</p>
+                        </div>
+                        <div class="problem-item">
+                            <div class="problem-dot"></div>
+                            <p>Custodial risk means your crypto isn't really yours</p>
+                        </div>
+                        <div class="problem-item">
+                            <div class="problem-dot"></div>
+                            <p>Slow settlements and KYC create unnecessary barriers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOLUTION -->
+        <section id="solution" class="scroll-margin">
+            <div class="container">
+                <h2 class="section-title">
+                    ProveX <span style="color: var(--primary);">Replaces Exchanges</span>
+                </h2>
+                <p class="section-subtitle">
+                    Using PrivateProver tech for instant, trustless, non-custodial settlement
+                </p>
+
+                <div class="grid-3" style="max-width: 900px; margin: 0 auto;">
+                    <div class="card" style="text-align:center;">
+                        <div class="icon-circle">👥</div>
+                        <h3>Buyers Install</h3>
+                        <p style="color: var(--muted-foreground); margin-top:8px;">
+                            Browser extension that proves bank payment to seller.
+                        </p>
+                    </div>
+
+                    <div class="card" style="text-align:center;">
+                        <div class="icon-circle">🔒</div>
+                        <h3>Sellers Prove</h3>
+                        <p style="color: var(--muted-foreground); margin-top:8px;">
+                            They sent coins to buyer's wallet using cryptographic proofs.
+                        </p>
+                    </div>
+
+                    <div class="card" style="text-align:center;">
+                        <div class="icon-circle">⚡</div>
+                        <h3>Instant Settlement</h3>
+                        <p style="color: var(--muted-foreground); margin-top:8px;">
+                            Sellers get money, buyers get coins. Goodbye middlemen.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOKENOMICS -->
+        <section id="tokenomics" class="section-muted scroll-margin">
+            <div class="container">
+                <div style="text-align:center;">
+                    <div class="token-chip">
+                        <span class="token-chip-icon"></span>
+                        <span>Deflationary Token</span>
+                    </div>
+                    <h2 class="section-title" style="margin-bottom:16px;">Scarcity Through Adoption</h2>
+                    <p class="section-subtitle">
+                        ProveX is automatically bought and burnt every time someone uses ProveX tech.
+                    </p>
+                </div>
+
+                <div class="grid-2" style="max-width: 900px; margin: 0 auto 32px;">
+                    <div class="card card-muted">
+                        <div class="icon-large">🛡️</div>
+                        <h3 style="font-size:1.5rem; margin-bottom:8px;">Never Inflates</h3>
+                        <p style="color: var(--muted-foreground); font-size:1rem;">
+                            The ProveX token supply only decreases. No new tokens are ever minted.
+                            Fixed supply becomes increasingly scarce with every transaction.
+                        </p>
+                    </div>
+
+                    <div class="card card-muted">
+                        <div class="icon-large">⚡</div>
+                        <h3 style="font-size:1.5rem; margin-bottom:8px;">Automatic Burns</h3>
+                        <p style="color: var(--muted-foreground); font-size:1rem;">
+                            Every successful proof burns tokens from the public market.
+                            More adoption = more burns = greater scarcity.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card card-soft" style="text-align:center; max-width: 900px; margin:0 auto;">
+                    <h3 style="font-size:1.875rem; margin-bottom:12px;">
+                        Blockchains solved double spends. ProveX amplifies their utility.
+                    </h3>
+                    <p style="font-size:1.1rem; color:var(--muted-foreground);">
+                        By removing middlemen that make crypto hard, then disrupting countless other industries,
+                        every use creates more scarcity in a token that can never inflate.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- USE CASES -->
+        <section id="use-cases" class="scroll-margin">
+            <div class="container" style="max-width: 1100px;">
+                <h2 class="section-title">
+                    Real-World <span style="color:var(--primary);">Use Cases</span>
+                </h2>
+                <p class="section-subtitle">
+                    ProveX revolutionizes industries by enabling trustless settlement.
+                </p>
+
+                <div class="card" style="margin-bottom:24px;">
+                    <div class="use-case-list">
+                        <div class="use-case-dot"></div>
+                        <div>
+                            <h3 style="margin-bottom:4px;">Fastest &amp; Easiest Wins</h3>
+                            <div class="use-case-body">
+                                <p><span>Crypto on/off-ramps &amp; CEXes</span> – Trustless P2P settlement replaces
+                                    custody/fees</p>
+                                <p><span>P2P escrow/marketplaces</span> – Tickets, domains, collectibles without
+                                    middlemen</p>
+                                <p><span>Payments &amp; remittances</span> – Private, instant cross-border settlement
+                                </p>
+                                <p><span>Identity &amp; KYC-lite</span> – Prove "over 18", "not on list" without data
+                                    dumps</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom:24px;">
+                    <div class="use-case-list">
+                        <div class="use-case-dot mid"></div>
+                        <div>
+                            <h3 style="margin-bottom:4px;">Mid-Term Applications</h3>
+                            <div class="use-case-body">
+                                <p><span>Reputation portability</span> – Export seller metrics to any platform</p>
+                                <p><span>Ticketing &amp; memberships</span> – Fraud-proof primary/secondary sales</p>
+                                <p><span>Insurance claims</span> – Verify events → auto-payout</p>
+                                <p><span>DePIN verification</span> – Attest real-world output without special hardware
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="use-case-list">
+                        <div class="use-case-dot long"></div>
+                        <div>
+                            <h3 style="margin-bottom:4px;">Long-Horizon Disruption</h3>
+                            <div class="use-case-body">
+                                <p><span>Supply chain &amp; trade finance</span> – Milestone proofs unlock capital</p>
+                                <p><span>Real estate &amp; RWA</span> – Registry/control proofs + escrowed settlement
+                                </p>
+                                <p><span>Healthcare &amp; licensing</span> – Credentialing without mass data retention
+                                </p>
+                                <p><span>Carbon/ESG</span> – Measured-at-source proofs for issuance/retirement</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY THIS WINS -->
+        <section id="why-provex" class="section-muted scroll-margin">
+            <div class="container">
+                <h2 class="section-title">
+                    Why This <span style="color:var(--primary);">Wins</span>
+                </h2>
+
+                <div class="grid-2" style="max-width: 900px; margin: 0 auto;">
+                    <div class="card card-muted">
+                        <div class="icon-large">🌐</div>
+                        <h3>Exchange-Killer UX</h3>
+                        <p style="color:var(--muted-foreground); margin-top:8px;">
+                            Instant, private, non-custodial settlement that feels simpler than a wire transfer.
+                        </p>
+                    </div>
+
+                    <div class="card card-muted">
+                        <div class="icon-large">⚡</div>
+                        <h3>Composability Moat</h3>
+                        <p style="color:var(--muted-foreground); margin-top:8px;">
+                            Once wallets/dApps integrate the rail, flows compound across use cases.
+                        </p>
+                    </div>
+
+                    <div class="card card-muted">
+                        <div class="icon-large">📈</div>
+                        <h3>Multi-Vertical Demand</h3>
+                        <p style="color:var(--muted-foreground); margin-top:8px;">
+                            Finance, identity, commerce, DePIN, enterprise—many independent burn engines.
+                        </p>
+                    </div>
+
+                    <div class="card card-muted">
+                        <div class="icon-large">🛡️</div>
+                        <h3>Credible Neutrality</h3>
+                        <p style="color:var(--muted-foreground); margin-top:8px;">
+                            Proofs are math; settlement is code. No favorites, no listings, no freeze button.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SACRIFICE CTA -->
+        <section id="sacrifice" class="scroll-margin">
+            <div class="container">
+                <div class="card card-soft"
+                    style="max-width: 900px; margin:0 auto; text-align:center; padding:40px 32px;">
+                    <div class="icon-circle" style="margin-bottom:24px;">⚡</div>
+                    <h2 class="section-title" style="margin-bottom:16px;">Join the Sacrifice</h2>
+                    <p class="section-subtitle" style="margin-bottom:32px;">
+                        Prove you believe in the removal of middlemen and replacing trust with proof.
+                        The ProveX sacrifice is ongoing for those who support the vision of true disintermediation.
+                    </p>
+
+                    <div class="sacrifice-points">
+                        <div class="sacrifice-item">
+                            <div class="sacrifice-dot"></div>
+                            <p style="color:var(--muted-foreground); font-size:1rem;">
+                                No expectation of profit from the work of others
+                            </p>
+                        </div>
+                        <div class="sacrifice-item">
+                            <div class="sacrifice-dot"></div>
+                            <p style="color:var(--muted-foreground); font-size:1rem;">
+                                You are the network—software you choose to run
+                            </p>
+                        </div>
+                        <div class="sacrifice-item">
+                            <div class="sacrifice-dot"></div>
+                            <p style="color:var(--muted-foreground); font-size:1rem;">
+                                Be part of the disintermediation revolution
+                            </p>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" onclick="window.open('https://provex.info', '_blank')">
+                        Join Sacrifice
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="container">
+                <div class="footer-inner">
+                    <button class="footer-link" id="disclaimer-open">Disclaimer</button>
+
+                    <p>Copyright © 2025. All Rights Reserved.</p>
+
+                    <p>
+                        PROVEX Contract Address:
+                        <span class="footer-mono">0x0000000000000000000000000000000000000000</span>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- DISCLAIMER MODAL -->
+    <div class="modal-backdrop" id="disclaimer-backdrop" aria-hidden="true">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Disclaimer</h3>
+                <button class="modal-close" id="disclaimer-close" aria-label="Close disclaimer">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+                <p>
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                    fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                    culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+                <p>
+                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+                    doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
+                    veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scroll handler
+        function scrollToTarget(target) {
+            var el = document.querySelector(target);
+            if (el) {
+                el.scrollIntoView({ behavior: "smooth" });
+            }
+        }
+
+        document.addEventListener("click", function (e) {
+            var target = e.target;
+            if (!(target instanceof HTMLElement)) return;
+
+            var scrollBtn = target.closest("[data-scroll]");
+            var brand = target.closest("[data-scroll-target='#hero']");
+
+            if (scrollBtn) {
+                var to = scrollBtn.getAttribute("data-scroll");
+                if (to) {
+                    e.preventDefault();
+                    scrollToTarget(to);
+
+                    var mobile = document.getElementById("nav-mobile");
+                    var toggle = document.getElementById("nav-toggle");
+                    if (mobile && toggle && mobile.classList.contains("open")) {
+                        mobile.classList.remove("open");
+                        toggle.classList.remove("open");
+                    }
+                }
+            } else if (brand) {
+                e.preventDefault();
+                scrollToTarget("#hero");
+            }
+        });
+
+        // Mobile nav toggle
+        (function () {
+            var toggle = document.getElementById("nav-toggle");
+            var mobile = document.getElementById("nav-mobile");
+            if (!toggle || !mobile) return;
+            toggle.addEventListener("click", function () {
+                mobile.classList.toggle("open");
+                toggle.classList.toggle("open");
+            });
+        })();
+
+        // Disclaimer modal
+        (function () {
+            var openBtn = document.getElementById("disclaimer-open");
+            var closeBtn = document.getElementById("disclaimer-close");
+            var backdrop = document.getElementById("disclaimer-backdrop");
+            if (!openBtn || !closeBtn || !backdrop) return;
+
+            function openModal() {
+                backdrop.classList.add("open");
+                backdrop.setAttribute("aria-hidden", "false");
+            }
+
+            function closeModal() {
+                backdrop.classList.remove("open");
+                backdrop.setAttribute("aria-hidden", "true");
+            }
+
+            openBtn.addEventListener("click", openModal);
+            closeBtn.addEventListener("click", closeModal);
+            backdrop.addEventListener("click", function (e) {
+                if (e.target === backdrop) closeModal();
+            });
+
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape") closeModal();
+            });
+        })();
+
+        // TECH BACKGROUND: vanilla port of your React TechBackground
+        (function () {
+            var canvas = document.getElementById("tech-bg");
+            if (!(canvas instanceof HTMLCanvasElement)) return;
+
+            var ctx = canvas.getContext("2d");
+            if (!ctx) return;
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener("resize", resizeCanvas);
+
+            var particles = [];
+            for (var i = 0; i < 50; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2 + 1
+                });
+            }
+
+            var gridSize = 50;
+            var animationFrame;
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw grid
+                ctx.strokeStyle = "hsla(189, 94%, 43%, 0.03)";
+                ctx.lineWidth = 1;
+
+                for (var x = 0; x < canvas.width; x += gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, canvas.height);
+                    ctx.stroke();
+                }
+
+                for (var y = 0; y < canvas.height; y += gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvas.width, y);
+                    ctx.stroke();
+                }
+
+                // Draw and update particles
+                particles.forEach(function (particle, index) {
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+
+                    if (particle.x < 0) particle.x = canvas.width;
+                    if (particle.x > canvas.width) particle.x = 0;
+                    if (particle.y < 0) particle.y = canvas.height;
+                    if (particle.y > canvas.height) particle.y = 0;
+
+                    ctx.fillStyle = "hsla(189, 94%, 43%, 0.4)";
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    for (var j = index + 1; j < particles.length; j++) {
+                        var other = particles[j];
+                        var dx = particle.x - other.x;
+                        var dy = particle.y - other.y;
+                        var distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < 150) {
+                            ctx.strokeStyle =
+                                "hsla(189, 94%, 43%, " + (0.15 * (1 - distance / 150)) + ")";
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(particle.x, particle.y);
+                            ctx.lineTo(other.x, other.y);
+                            ctx.stroke();
+                        }
+                    }
+                });
+
+                animationFrame = requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            window.addEventListener("beforeunload", function () {
+                window.removeEventListener("resize", resizeCanvas);
+                cancelAnimationFrame(animationFrame);
+            });
+        })();
+    </script>
+</body>
+
+</html>
