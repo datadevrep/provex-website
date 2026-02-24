@@ -682,6 +682,119 @@
             /* very faint thumb */
             border-radius: 10px;
         }
+
+        /* VIDEO BREAKDOWN SECTION */
+        .video-breakdown-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .video-breakdown-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            background-color: var(--primary);
+            color: hsl(220, 25%, 9%);
+            margin-bottom: 24px;
+        }
+
+        .video-breakdown-title {
+            font-size: clamp(2rem, 3vw + 0.5rem, 3rem);
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .video-breakdown-desc {
+            font-size: 1.1rem;
+            color: var(--muted-foreground);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .video-breakdown-bullet {
+            font-size: 1rem;
+            color: var(--muted-foreground);
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        .video-breakdown-tip {
+            font-size: 0.875rem;
+            color: rgba(166, 176, 195, 0.6);
+            font-style: italic;
+            margin-top: 20px;
+        }
+
+        .video-breakdown-player {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            background-color: hsl(220, 23%, 8%);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .video-breakdown-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .video-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 14px 32px;
+            border-radius: 999px;
+            border: none;
+            background-color: var(--primary);
+            color: hsl(220, 25%, 9%);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            z-index: 5;
+        }
+
+        .video-play-btn:hover {
+            background-color: hsl(189, 94%, 48%);
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        .video-play-btn.hidden {
+            display: none;
+        }
+
+        @media (max-width: 900px) {
+            .video-breakdown-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+        }
+
+        .video-breakdown-player::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 2;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-breakdown-player.playing::before {
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -758,8 +871,38 @@
             </div>
         </section>
 
+        <!-- VIDEO BREAKDOWN -->
+        <section id="video-breakdown" class="section-muted scroll-margin">
+            <div class="container">
+                <div class="video-breakdown-grid">
+                    <div class="video-breakdown-text">
+                        <div class="video-breakdown-badge">LONG-FORM BREAKDOWN</div>
+                        <h2 class="video-breakdown-title">Richard Heart explains ProveX</h2>
+                        <p class="video-breakdown-desc">
+                            Richard Heart explains ProveX's sacrifice and its zero-knowledge proof technology.
+                        </p>
+                        <p class="video-breakdown-bullet">• Learn how this new crypto primitive addresses counterparty risk and
+                            surpasses blockchain limitations.</p>
+                        <p class="video-breakdown-bullet">• Explore the potential of ProveX compared to Bitcoin and Ethereum.
+                        </p>
+                        <p class="video-breakdown-tip">Tip: enable picture-in-picture mode or playback speed controls if you
+                            want to skim faster.</p>
+                    </div>
+                    <div class="video-breakdown-player">
+                        <video id="breakdown-video" class="video-breakdown-video" preload="metadata" poster="cover.jpg">
+                            <source src="output.webm" type="video/webm">
+                            Your browser does not support the video tag.
+                        </video>
+                        <button class="video-play-btn" id="video-play-btn" aria-label="Play Video">
+                            Play Video
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- PROBLEM -->
-        <section id="problem" class="section-muted scroll-margin">
+        <section id="problem" class="scroll-margin">
             <div class="container">
                 <h2 class="section-title">The Middleman Problem</h2>
                 <p class="section-subtitle">
@@ -787,7 +930,7 @@
         </section>
 
         <!-- SOLUTION -->
-        <section id="solution" class="scroll-margin">
+        <section id="solution" class="section-muted scroll-margin">
             <div class="container">
                 <h2 class="section-title">
                     ProveX <span style="color: var(--primary);">Replaces Exchanges</span>
@@ -825,7 +968,7 @@
         </section>
 
         <!-- TOKENOMICS -->
-        <section id="tokenomics" class="section-muted scroll-margin">
+        <section id="tokenomics" class="scroll-margin">
             <div class="container">
                 <div style="text-align:center;">
                     <div class="token-chip">
@@ -872,7 +1015,7 @@
         </section>
 
         <!-- USE CASES -->
-        <section id="use-cases" class="scroll-margin">
+        <section id="use-cases" class="section-muted scroll-margin">
             <div class="container" style="max-width: 1100px;">
                 <h2 class="section-title">
                     Real-World <span style="color:var(--primary);">Use Cases</span>
@@ -936,7 +1079,7 @@
         </section>
 
         <!-- WHY THIS WINS -->
-        <section id="why-provex" class="section-muted scroll-margin">
+        <section id="why-provex" class="scroll-margin">
             <div class="container">
                 <h2 class="section-title">
                     Why This <span style="color:var(--primary);">Wins</span>
@@ -979,7 +1122,7 @@
         </section>
 
         <!-- SACRIFICE CTA -->
-        <section id="sacrifice" class="scroll-margin">
+        <section id="sacrifice" class="section-muted scroll-margin">
             <div class="container">
                 <div class="card card-soft"
                     style="max-width: 900px; margin:0 auto; text-align:center; padding:40px 32px;">
@@ -1314,6 +1457,41 @@
 
             document.addEventListener("keydown", function (e) {
                 if (e.key === "Escape") closeModal();
+            });
+        })();
+
+        // Video play button
+        (function () {
+            var video = document.getElementById("breakdown-video");
+            var playBtn = document.getElementById("video-play-btn");
+            var player = document.querySelector(".video-breakdown-player");
+            if (!video || !playBtn || !player) return;
+
+            var source = video.querySelector("source");
+            if (source) {
+                source.addEventListener("error", function () {
+                    source.src = "https://provex.com/video/480/output.webm";
+                    video.load();
+                });
+            }
+
+            playBtn.addEventListener("click", function () {
+                video.setAttribute("controls", "");
+                player.classList.add("playing");
+                video.play();
+                playBtn.classList.add("hidden");
+            });
+
+            video.addEventListener("play", function () {
+                playBtn.classList.add("hidden");
+                player.classList.add("playing");
+                video.setAttribute("controls", "");
+            });
+
+            video.addEventListener("ended", function () {
+                playBtn.classList.remove("hidden");
+                player.classList.remove("playing");
+                video.removeAttribute("controls");
             });
         })();
 
